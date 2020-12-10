@@ -288,7 +288,7 @@ int main(int argc, char **argv) {
     
     Song song;
     //        SONG   SOUNDFONT  BEATS/MEASURE  BPM     MEASURES
-    song_init(&song, soundfont, 3,             120.0f, 26);
+    song_init(&song, soundfont, 3,             100.0f, 26);
 
     int piano = 0;
 
@@ -439,6 +439,56 @@ int main(int argc, char **argv) {
     song_note(&song, piano, F3, 0.5,  o, 1.0); o += 1.0/2;
     song_note(&song, piano, G3, 0.5,  o, 1.0); o += 1.0/2;
     song_note(&song, piano, A3, 0.5,  o, 1.0); o += 1.0/2;
+
+    // Measures 11-15
+    // ====================================================
+
+    song_note(&song, piano, D5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, E5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, F5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, D5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, E5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, F5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, BF3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, G3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, A3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, BF3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, C4, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, D4, 0.5,  o, 1.0); o += 1.0/4;
+
+    song_note(&song, piano, G4, 0.5,  u, 1.0); u += 1.0/2;
+    u += 1.0/2;
+    u += 1.0/2;
+    song_note(&song, piano, E3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, D4, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, C4, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, BF3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, A3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, G3, 0.5,  o, 1.0); o += 1.0/4;
+
+    song_note(&song, piano, C5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, D5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, E5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, C5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, D5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, E5, 0.5,  u, 1.0); u += 1.0/4;
+    song_note(&song, piano, A3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, F3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, G3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, A3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, BF3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, C4, 0.5,  o, 1.0); o += 1.0/4;
+
+    song_note(&song, piano, F4, 0.5,  u, 1.0); u += 1.0/2;
+    u += 1.0/2;
+    song_note(&song, piano, BF4, 0.5,  u, 1.0); u += 1.0/1;
+    song_note(&song, piano, D3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, C4, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, BF3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, A3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, G3, 0.5,  o, 1.0); o += 1.0/4;
+    song_note(&song, piano, F3, 0.5,  o, 1.0); o += 1.0/4;
+
 
 
 
