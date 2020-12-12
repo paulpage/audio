@@ -9,6 +9,19 @@
 tsf *soundfont;
 Sound sound;
 
+// Struct note
+// - u8 start numerator
+// - u8 start denominator
+// - u16 measure
+// - u16 note
+// - u16 instrument
+// - u32 velocity
+// - u8 duration numerator
+// - u8 duration denominator
+// - (u16 free space)
+
+
+
 void play(int grid[Y][X]) {
 
     Song song;
@@ -94,7 +107,7 @@ int main(void) {
 
         BeginDrawing();
 
-        ClearBackground((Color){40, 40, 40});
+        ClearBackground((Color){40, 40, 40, 255});
 
         // Draw the grid
         for (int y = 0; y < Y; y++) {
@@ -102,7 +115,11 @@ int main(void) {
                 if (grid[y][x] == 1) {
                     DrawRectangle(x * note_height + x_offset, y * note_height + y_offset, note_height - 2, note_height - 2, WHITE);
                 } else {
-                    DrawRectangle(x * note_height + x_offset, y * note_height + y_offset, note_height - 2, note_height - 2, BLACK);
+                    Color color = BLACK;
+                    if ((x / 16) % 2 == 0) {
+                        color = (Color){ 24, 24, 24, 255};
+                    }
+                    DrawRectangle(x * note_height + x_offset, y * note_height + y_offset, note_height - 2, note_height - 2, color);
                 }
             }
         }
@@ -114,6 +131,9 @@ int main(void) {
                 color = BLACK;
             }
             DrawRectangle(0, y * note_height + y_offset, 25, note_height - 2, color);
+            if (A0 + (Y - y - 1) == C4) {
+                DrawText("C4", 5, y * note_height + y_offset, 15, RED);
+            }
         }
 
         EndDrawing();
