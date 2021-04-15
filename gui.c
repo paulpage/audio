@@ -25,13 +25,13 @@ Sound sound;
 void play(int grid[Y][X]) {
 
     Song song;
-    song_init(&song, soundfont, 4, 100.0f, 8);
+    song_init(&song, soundfont, 4, 148.0f, 8);
     int piano = 0;
 
     for (int y = 0; y < Y; y++) {
         for (int x = 0; x < X; x++) {
             if (grid[y][x] == 1) {
-                song_note(&song, piano, A0 + (Y - y), 0.5, 1.0f + (float)x/4.0f, 1.0);
+                song_note(&song, piano, A0 + (Y - y - 1), 0.5, 1.0f + (float)x/4.0f, 1.0);
             }
         }
     }
@@ -50,6 +50,23 @@ void play(int grid[Y][X]) {
     PlaySound(sound);
 }
 
+void play_note(int index, int velocity) {
+    int note = A0 + (Y - index - 1);
+    Song song;
+    song_init(&song, soundfont, 4, 120.0f, 1);
+    int piano = 0;
+    song_note(&song, piano, note, (float)velocity/128.0f, 1.0f + (float)0/4.0f, 1.0);
+    Wave wave;
+    wave.sampleCount = song.num_samples;
+    wave.sampleRate = song.sample_rate;
+    wave.sampleSize = 16;
+    wave.channels = 2;
+    wave.data = song.samples;
+    Sound sound = LoadSoundFromWave(wave);
+    PlaySound(sound);
+
+}
+
 int main(void) {
     int screen_width = 800;
     int screen_height = 600;
@@ -64,30 +81,61 @@ int main(void) {
         }
     }
 
-    int note_height = 15;
+    int cell_height = 12;
+    int cell_width = 15;
 
     soundfont = tsf_load_filename("/home/paul/Downloads/soundfonts/sal/SalC5Light2.sf2");
     InitWindow(screen_width, screen_height, "Music Editor");
     InitAudioDevice();
-    SetTargetFPS(60);
+    /* SetTargetFPS(60); */
+
+    /* FILE *f; */
+    /* f = fopen("/dev/snd/midiC3D0", "rb"); */
+    /* bool note_on = false; */
+    /* int current_note = 0; */
+    /* int current_velocity = 0; */
 
     while (!WindowShouldClose()) {
+
+        /* while(1){ */
+        /* int c = fgetc(f); */
+        /* if (c == 0x90) { */
+        /*     int note = fgetc(f); */
+        /*     int velocity = fgetc(f); */
+        /*     if (velocity == 0) { */
+        /*         note_on = false; */
+        /*     } else { */
+        /*         note_on = true; */
+        /*         /1* printf("Note on %d %d\n", note, velocity); *1/ */
+        /*         play_note(note, velocity); */
+        /*         current_note = note; */
+        /*         current_velocity = velocity; */
+        /*     } */
+        /* } */
+        /* } */
+
+        /* if (note_on) { */
+        /*     printf("Current note %d %d\n", current_note, current_velocity); */
+        /*     DrawText(TextFormat("note %d %d", current_note, current_velocity), 0, 0, 20, RED); */
+        /* } */
 
         // update
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             int mouse_x = GetMouseX();
             int mouse_y = GetMouseY();
-            if (mouse_x - x_offset > 0 && mouse_x - x_offset < X * note_height && mouse_y - y_offset > 0 && mouse_y - y_offset < Y * note_height) {
-                grid[(mouse_y - y_offset) / note_height][(mouse_x - x_offset) / note_height] = (grid[(mouse_y - y_offset) / note_height][(mouse_x - x_offset) / note_height] == 1 ? 0 : 1);
+            if (mouse_x - x_offset > 0 && mouse_x - x_offset < X * cell_width && mouse_y - y_offset > 0 && mouse_y - y_offset < Y * cell_height) {
+                grid[(mouse_y - y_offset) / cell_height][(mouse_x - x_offset) / cell_width] = (grid[(mouse_y - y_offset) / cell_height][(mouse_x - x_offset) / cell_width] == 1 ? 0 : 1);
+
+                play_note((mouse_y - y_offset) / cell_height, 64);
             }
         }
 
         int wheel = GetMouseWheelMove();
         if (wheel != 0) {
             if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL)) {
-                x_offset += wheel * note_height * 3;
+                x_offset += wheel * cell_width * 3;
             } else {
-                y_offset += wheel * note_height * 3;
+                y_offset += wheel * cell_height * 3;
             }
         }
 
@@ -107,20 +155,29 @@ int main(void) {
 
         BeginDrawing();
 
-        ClearBackground((Color){40, 40, 40, 255});
+        ClearBackground((Color){60, 60, 60, 255});
 
         // Draw the grid
         for (int y = 0; y < Y; y++) {
             for (int x = 0; x < X; x++) {
+                Color color;
                 if (grid[y][x] == 1) {
-                    DrawRectangle(x * note_height + x_offset, y * note_height + y_offset, note_height - 2, note_height - 2, WHITE);
+                    color = WHITE;
                 } else {
-                    Color color = BLACK;
-                    if ((x / 16) % 2 == 0) {
-                        color = (Color){ 24, 24, 24, 255};
+                    color = (Color){40, 40, 40, 255};
+                    if (y % 12 == 11 || y % 12 == 9 || y % 12 == 6 || y % 12 == 4 || y % 12 == 2) {
+                        color = BLACK;
                     }
-                    DrawRectangle(x * note_height + x_offset, y * note_height + y_offset, note_height - 2, note_height - 2, color);
+                    /* if ((x / 16) % 2 == 0) { */
+                    /*     color = (Color){ 24, 24, 24, 255}; */
+                    /* } */
+                    /* if ((x / 4) % 2 == 0) { */
+                    /*     color.r += 10; */
+                    /*     color.g += 10; */
+                    /*     color.b += 10; */
+                    /* } */
                 }
+                DrawRectangle(x * cell_width + x_offset, y * cell_height + y_offset, cell_width - 1, cell_height - 1, color);
             }
         }
 
@@ -130,9 +187,19 @@ int main(void) {
             if (y % 12 == 11 || y % 12 == 9 || y % 12 == 6 || y % 12 == 4 || y % 12 == 2) {
                 color = BLACK;
             }
-            DrawRectangle(0, y * note_height + y_offset, 25, note_height - 2, color);
+            DrawRectangle(0, y * cell_height + y_offset, 25, cell_height - 2, color);
+
+            // Draw labels for C notes
+            switch (A0 + (Y - y - 1)) {
+                case C1: DrawText("C1", 5, y * cell_height + y_offset, 12, RED); break;
+                case C2: DrawText("C2", 5, y * cell_height + y_offset, 12, RED); break;
+                case C3: DrawText("C3", 5, y * cell_height + y_offset, 12, RED); break;
+                case C4: DrawText("C4", 5, y * cell_height + y_offset, 12, RED); break;
+                case C5: DrawText("C5", 5, y * cell_height + y_offset, 12, RED); break;
+                case C6: DrawText("C6", 5, y * cell_height + y_offset, 12, RED); break;
+                case C7: DrawText("C7", 5, y * cell_height + y_offset, 12, RED); break;
+            }
             if (A0 + (Y - y - 1) == C4) {
-                DrawText("C4", 5, y * note_height + y_offset, 15, RED);
             }
         }
 
