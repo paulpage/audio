@@ -8,6 +8,24 @@
 #define TSF_IMPLEMENTATION
 #include "lib/tsf.h"
 
+Soundfont load_soundfont(char *filename, bool *is_loaded) {
+    FILE *file;
+
+    Soundfont soundfont = {0};
+
+    if ((file = fopen(filename, "r"))) {
+        fclose(file);
+    } else {
+        printf("Error: File '%s' does not exist.\n", filename);
+        *is_loaded = false;
+        return soundfont;
+    }
+
+    soundfont.tsf = tsf_load_filename(filename);
+    *is_loaded = true;
+    return soundfont;
+}
+
 WavHeader get_wav_header(
         uint32_t size,
         uint32_t sample_rate,
@@ -47,14 +65,14 @@ Fraction frac(float top, float bottom) {
 }
 
 
-void song_init(Song *song, tsf *soundfont, int beats_per_measure, float bpm, int measures) {
+void song_init(Song *song, Soundfont soundfont, int beats_per_measure, float bpm, int measures) {
     int mode = (NUM_CHANNELS == 1
             ? TSF_MONO
             : TSF_STEREO_INTERLEAVED);
 
 
     song->soundfont = soundfont;
-    tsf_set_output(song->soundfont, mode, SAMPLE_RATE, 0);
+    tsf_set_output(song->soundfont.tsf, mode, SAMPLE_RATE, 0);
 
     song->num_channels = NUM_CHANNELS;
     song->sample_rate = SAMPLE_RATE;
@@ -95,7 +113,7 @@ void song_note(
     float samples_per_beat = song->sample_rate / (song->bpm / 60.0);
     uint32_t offset = (beat - 1.0) * samples_per_beat;
     uint32_t duration_samples = duration * samples_per_beat;
-    tsf_note_on(song->soundfont, preset, key, vel);
-    tsf_render_short(song->soundfont, song->samples + offset * song->num_channels, duration_samples, 1);
-    tsf_note_off(song->soundfont, preset, key);
+    tsf_note_on(song->soundfont.tsf, preset, key, vel);
+    tsf_render_short(song->soundfont.tsf, song->samples + offset * song->num_channels, duration_samples, 1);
+    tsf_note_off(song->soundfont.tsf, preset, key);
 }

@@ -138,6 +138,10 @@
 #define SAMPLE_RATE 44100
 #define BITS_PER_SAMPLE 16
 
+typedef struct Soundfont {
+    tsf *tsf;
+} Soundfont;
+
 typedef struct {
     // Header
     char group_id[4];
@@ -165,7 +169,7 @@ typedef struct {
 } Fraction;
 
 typedef struct {
-    tsf *soundfont;
+    Soundfont soundfont;
     uint16_t num_channels;
     uint32_t num_samples;
     uint32_t sample_rate;
@@ -176,8 +180,9 @@ typedef struct {
     int measures;
 } Song;
 
+Soundfont load_soundfont(char *filename, bool *is_loaded);
 WavHeader get_wav_header(uint32_t size, uint32_t sample_rate, uint16_t num_channels, uint16_t bits_per_sample);
 Fraction frac(float top, float bottom);
-void song_init(Song *song, tsf *soundfont, int beats_per_measure, float bpm, int measures);
+void song_init(Song *song, Soundfont soundfont, int beats_per_measure, float bpm, int measures);
 void song_write(Song *song, char *filename);
 void song_note(Song *song, int preset, int key, float vel, float beat, float duration);

@@ -6,7 +6,7 @@
 #define X 256
 #define Y 88
 
-tsf *soundfont;
+Soundfont soundfont;
 Sound sound;
 
 // Struct note
@@ -40,8 +40,9 @@ void play(int grid[Y][X]) {
     /* song_write(&song, "gui_test.wav"); */
     // TODO load this from the data instead of file
     /* sound = LoadSound("gui_test.wav"); */
+
     Wave wave;
-    wave.sampleCount = song.num_samples;
+    wave.frameCount = song.num_samples / 2;
     wave.sampleRate = song.sample_rate;
     wave.sampleSize = 16;
     wave.channels = 2;
@@ -57,7 +58,7 @@ void play_note(int index, int velocity) {
     int piano = 0;
     song_note(&song, piano, note, (float)velocity/128.0f, 1.0f + (float)0/4.0f, 1.0);
     Wave wave;
-    wave.sampleCount = song.num_samples;
+    wave.frameCount = song.num_samples / 2;
     wave.sampleRate = song.sample_rate;
     wave.sampleSize = 16;
     wave.channels = 2;
@@ -84,7 +85,12 @@ int main(void) {
     int cell_height = 12;
     int cell_width = 15;
 
-    soundfont = tsf_load_filename("/home/paul/Downloads/soundfonts/sal/SalC5Light2.sf2");
+    bool is_loaded = false;
+    soundfont = load_soundfont("/home/paul/Downloads/chorium.sf2", &is_loaded);
+    if (!is_loaded) {
+        return 1;
+    }
+
     InitWindow(screen_width, screen_height, "Music Editor");
     InitAudioDevice();
     /* SetTargetFPS(60); */

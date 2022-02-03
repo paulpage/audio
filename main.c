@@ -1,9 +1,11 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "song.h"
 
-#define TSF_IMPLEMENTATION
 #include "lib/tsf.h"
 
 void write_invention_4(tsf *soundfont) {
