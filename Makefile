@@ -5,3 +5,6 @@ default:
 
 # default:
 # 	${CC} -g -std=c99 -lm -Wall ${CFLAGS} song.c main.c
+
+run: default
+	./gui

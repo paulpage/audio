@@ -8,6 +8,27 @@
 
 #include "lib/tsf.h"
 
+static int WHITE_NOTES[52] = {
+    A0, B0, C1, D1, E1, F1, G1,
+    A1, B1, C2, D2, E2, F2, G2,
+    A2, B2, C3, D3, E3, F3, G3,
+    A3, B3, C4, D4, E4, F4, G4,
+    A4, B4, C5, D5, E5, F5, G5,
+    A5, B5, C6, D6, E6, F6, G6,
+    A6, B6, C7, D7, E7, F7, G7,
+    A7, B7, C8,
+};
+static int BLACK_NOTES[36] = {
+    AS0, CS1, DS1, FS1, GS1,
+    AS1, CS2, DS2, FS2, GS2,
+    AS2, CS3, DS3, FS3, GS3,
+    AS3, CS4, DS4, FS4, GS4,
+    AS4, CS5, DS5, FS5, GS5,
+    AS5, CS6, DS6, FS6, GS6,
+    AS6, CS7, DS7, FS7, GS7,
+    AS7,
+};
+
 void write_invention_4(tsf *soundfont) {
     Song song;
     //        SONG   SOUNDFONT  BEATS/MEASURE  BPM     MEASURES

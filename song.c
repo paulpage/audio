@@ -8,6 +8,26 @@
 #define TSF_IMPLEMENTATION
 #include "lib/tsf.h"
 
+////////////////////////////////////////////////////
+// Timer
+#include <time.h>
+#include <unistd.h>
+#include <stdint.h>
+uint64_t get_performance_counter() {
+    uint64_t t;
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &now);
+    t = now.tv_sec;
+    t *= 1000000000;
+    t += now.tv_nsec;
+    return t;
+}
+
+uint64_t get_performance_frequency() {
+    return 1000000000;
+}
+////////////////////////////////////////////////////
+
 Soundfont load_soundfont(char *filename, bool *is_loaded) {
     FILE *file;
 
@@ -110,10 +130,21 @@ void song_note(
         float duration)
 {
 
+                /* printf("song_note\n"); */
+                /* uint64_t t = get_performance_counter(); */
     float samples_per_beat = song->sample_rate / (song->bpm / 60.0);
     uint32_t offset = (beat - 1.0) * samples_per_beat;
     uint32_t duration_samples = duration * samples_per_beat;
+                /* printf("  vars: %f ms\n", (get_performance_counter() - t) / (float)get_performance_frequency() * 1000.0f); */
+                /* t = get_performance_counter(); */
     tsf_note_on(song->soundfont.tsf, preset, key, vel);
+                /* printf("  note_on: %f ms\n", (get_performance_counter() - t) / (float)get_performance_frequency() * 1000.0f); */
+                /* t = get_performance_counter(); */
+    printf("%d\n", duration_samples);
     tsf_render_short(song->soundfont.tsf, song->samples + offset * song->num_channels, duration_samples, 1);
+                /* printf("  render: %f ms\n", (get_performance_counter() - t) / (float)get_performance_frequency() * 1000.0f); */
+                /* t = get_performance_counter(); */
     tsf_note_off(song->soundfont.tsf, preset, key);
+                /* printf("  note_off: %f ms\n", (get_performance_counter() - t) / (float)get_performance_frequency() * 1000.0f); */
+                /* t = get_performance_counter(); */
 }
